@@ -124,25 +124,25 @@ INSERT INTO `modules` (`id`, `name`, `code`, `year`, `academic_period`, `prerequ
 	(61, 'Mathematical Modelling with ODEs', 'MAPB080', 1, 1, 0),
 	(62, 'Hydrodynamic Stability', 'MAPC080', 1, 1, 0),
 	(63, 'Financial Mathematics', 'MAPD080', 1, 2, 0),
-	(66, 'Advanced Mathematical Programming', 'MAPE080', 1, 2, 0),
-	(67, 'General Theory of Relativity', 'MAPF080', 1, 2, 0),
+	(64, 'Advanced Mathematical Programming', 'MAPE080', 1, 2, 0),
+	(65, 'General Theory of Relativity', 'MAPF080', 1, 2, 0),
 	
-	(68, 'Research Project', 'MPHS080', 1, 1, 1),
-	(69, 'Quantum Mechanics', 'MPHA081', 1, 1, 0),
-	(70, 'Statistical Mechanics', 'MPHB081', 1, 1, 0),
-	(71, 'Electrodynamics', 'MPHA082', 1, 2, 0),
-	(72, 'Solid State Physics', 'MPHB082', 1, 2, 0),
+	(66, 'Research Project', 'MPHS080', 1, 1, 1),
+	(67, 'Quantum Mechanics', 'MPHA081', 1, 1, 0),
+	(68, 'Statistical Mechanics', 'MPHB081', 1, 1, 0),
+	(69, 'Electrodynamics', 'MPHA082', 1, 2, 0),
+	(70, 'Solid State Physics', 'MPHB082', 1, 2, 0),
 	
 	
-	(73, 'Research Project', 'MSTS080', 1, 1, 1),
-	(74, 'Probabilty Theory', 'MSTA081', 1, 1, 0),
-	(75, 'Statistical Inference', 'MSTA082', 1, 2, 0),
-	(76, 'Sampling Theory', 'MSTB081', 1, 1, 0),
-	(77, 'Biostatistics', 'MSTC081', 1, 1, 0),
-	(78, 'Nonparametric Statistical Inference', 'MSTB082', 1, 2, 0),
-	(79, 'Multivariant Analysis', 'MSTD081', 1, 1, 0),
-	(80, 'Stochastic Processes', 'MSTC082', 1, 2, 0),
-	(81, 'Categorical Data Analysis', 'MSTE081', 1, 2, 0);
+	(71, 'Research Project', 'MSTS080', 1, 1, 1),
+	(72, 'Probabilty Theory', 'MSTA081', 1, 1, 0),
+	(73, 'Statistical Inference', 'MSTA082', 1, 2, 0),
+	(74, 'Sampling Theory', 'MSTB081', 1, 1, 0),
+	(75, 'Biostatistics', 'MSTC081', 1, 1, 0),
+	(76, 'Nonparametric Statistical Inference', 'MSTB082', 1, 2, 0),
+	(77, 'Multivariant Analysis', 'MSTD081', 1, 1, 0),
+	(78, 'Stochastic Processes', 'MSTC082', 1, 2, 0),
+	(79, 'Categorical Data Analysis', 'MSTE081', 1, 2, 0);
 	
 
 -- --------------------------------------------------------
@@ -216,12 +216,14 @@ INSERT INTO `course_modules` (`course_id`, `module_id`) VALUES
 (3, 59),
 
 
+(4, 66),
+(4, 67),
 (4, 68),
 (4, 69),
 (4, 70),
-(4, 71),
-(4, 72),
 
+(5, 71),
+(5, 72),
 (5, 73),
 (5, 74),
 (5, 75),
@@ -229,8 +231,6 @@ INSERT INTO `course_modules` (`course_id`, `module_id`) VALUES
 (5, 77),
 (5, 78),
 (5, 79),
-(5, 80),
-(5, 81),
 
 
 (6, 60),
@@ -238,8 +238,6 @@ INSERT INTO `course_modules` (`course_id`, `module_id`) VALUES
 (6, 62),
 (6, 63),
 (6, 64),
-(6, 65),
-(6, 66),
-(6, 67);
+(6, 65);
 
 -- --------------------------------------------------------
