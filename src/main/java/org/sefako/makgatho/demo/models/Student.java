@@ -15,18 +15,21 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "students")
-public class Student extends User{
+public class Student{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	@Column(unique = true)
 	private Long studentNum;
+	
 	@ManyToOne()
-	@JoinColumn(name = "role_id")
-	private Role role;
+	@JoinColumn(name = "user_id")
+	private User user;
+	
 	@OneToMany(mappedBy = "student")
 	private Set<StudentCourse> studentCourses;
+	
 	private Date registeredAt;
 	
 	
@@ -54,12 +57,16 @@ public class Student extends User{
 		this.studentNum = studentNum;
 	}
 
-	public Role getRole() {
-		return role;
+	public User getUser() {
+		return user;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Integer getId() {

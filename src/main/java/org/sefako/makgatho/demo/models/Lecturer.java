@@ -14,15 +14,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "lecturers")
-public class Lecturer extends User{
+public class Lecturer{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	
-	@ManyToOne()
-	@JoinColumn(name = "role_id")
-	private Role role;
 	
 	@ManyToMany()
 	@JoinTable(name="lecturer_modules", 
@@ -38,20 +34,24 @@ public class Lecturer extends User{
 	)
 	private Set<Course> courses;
 	
+	@ManyToOne()
+	@JoinColumn(name = "user_id")
+	private User user;
+	
 	public Integer getId() {
 		return id;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
 	}
 
 	public Set<Module> getModules() {

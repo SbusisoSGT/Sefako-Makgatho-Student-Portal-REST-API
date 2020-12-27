@@ -28,6 +28,25 @@ public class Role {
 	)
 	private Set<Permission> permissions;
 	
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@ManyToMany()
+	@JoinTable(name="role_users", 
+		joinColumns = { @JoinColumn(name="role_id")},
+		inverseJoinColumns = {@JoinColumn(name="user_id")}	
+	)
+	private Set<User> users;
+	
 	public String getName() {
 		return name;
 	}

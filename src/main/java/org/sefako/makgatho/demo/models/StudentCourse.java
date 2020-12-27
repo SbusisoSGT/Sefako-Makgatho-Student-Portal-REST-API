@@ -37,6 +37,7 @@ public class StudentCourse {
 	@Column(columnDefinition = "boolean default false")
 	private boolean completed;
 	
+	@Column(columnDefinition = "INT default 1")
 	private int currentLevel;
 
 	public Integer getId() {

@@ -1,13 +1,9 @@
 package org.sefako.makgatho.demo.controllers;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import org.sefako.makgatho.demo.models.Role;
 import org.sefako.makgatho.demo.models.Student;
-import org.sefako.makgatho.demo.repositories.RoleRepository;
+import org.sefako.makgatho.demo.models.dto.StudentDTO;
 import org.sefako.makgatho.demo.repositories.StudentRepository;
+import org.sefako.makgatho.demo.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,33 +22,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudentController {
 
 	@Autowired
-	StudentRepository studentRepository;
+	StudentService studentService;
 	
 	@Autowired
-	RoleRepository roleRepository;
+	StudentRepository studentRepository;
 	
 	@GetMapping("/")
-	public List<Student> index()
+	public ResponseEntity<?> index()
 	{
-		return studentRepository.findAll();
+		return new ResponseEntity<>(studentService.all(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
-	public Optional<Student> show(@RequestParam Integer id)
+	public ResponseEntity<?> show(@RequestParam Integer id)
 	{
-		return studentRepository.findById(id);
+		if(studentRepository.existsById(id))
+			return new ResponseEntity<>(studentService.find(id), HttpStatus.OK);
+		else
+			return new ResponseEntity<>("Student course Not Found", HttpStatus.NOT_FOUND);
 	}
 	
-	@PostMapping("/{role_id}")
-	public ResponseEntity<?> store(@RequestParam Integer role_id, @RequestBody Student student)
+	@PostMapping("/")
+	public ResponseEntity<?> store(@RequestBody StudentDTO studentDTO)
 	{
-		if(roleRepository.existsById(role_id)) {
-			Role role = roleRepository.findById(role_id).get();
-			student.setRole(role);
-			student.setRegisteredAt(new Date());
-			studentRepository.save(student);
+		if(studentService.save(studentDTO))
 			return new ResponseEntity<>("Student registered successfully", HttpStatus.CREATED);
-		}else
+		else
 			return new ResponseEntity<>("Role Not Found", HttpStatus.NOT_FOUND);
 	}
 	
