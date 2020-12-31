@@ -3,8 +3,10 @@ package org.sefako.makgatho.demo.models;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,21 +17,21 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "student_courses")
-public class StudentCourse {
+public class StudentCourse{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "student_id")
 	private Student student;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id")
 	private Course course;
 	
-	@ManyToMany(mappedBy = "module")
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "module")
 	private Set<StudentModule> studentModules;
 	
 	private Date registeredAt;

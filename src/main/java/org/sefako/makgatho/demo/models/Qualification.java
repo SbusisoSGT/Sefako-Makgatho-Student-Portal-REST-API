@@ -2,7 +2,9 @@ package org.sefako.makgatho.demo.models;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +20,7 @@ public class Qualification {
 	private Integer id;
 	private String name;
 	
-	@OneToMany(mappedBy = "qualification")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "qualification")
 	private Set<Course> courses;
 	
 	public Integer getId() {

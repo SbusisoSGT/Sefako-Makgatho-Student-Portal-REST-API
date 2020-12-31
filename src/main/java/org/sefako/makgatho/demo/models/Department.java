@@ -3,6 +3,7 @@ package org.sefako.makgatho.demo.models;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +19,7 @@ public class Department {
 	private Integer id;
 	private String name;
 	
-	@ManyToMany(mappedBy = "departments")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "departments")
 	private Set<School> schools;
 	
 	public Integer getId() {

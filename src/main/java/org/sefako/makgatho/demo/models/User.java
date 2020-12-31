@@ -2,7 +2,9 @@ package org.sefako.makgatho.demo.models;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,10 +25,10 @@ public class User{
 	private String lastname;
 	private String password;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
 	private Set<Student> students;
 	
-	@ManyToMany(mappedBy = "users")
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "users")
 	private Set<Role> roles;
 	
 	public Set<Role> getRoles() {

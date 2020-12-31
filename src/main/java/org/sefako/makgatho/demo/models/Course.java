@@ -2,8 +2,10 @@ package org.sefako.makgatho.demo.models;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,25 +29,25 @@ public class Course {
 	private String code;
 	private int duration;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "qualification_id")
 	private Qualification qualification;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "school_id")
 	private School school;
 	
-	@ManyToMany()
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="course_modules", 
 		joinColumns = { @JoinColumn(name="course_id")},
 		inverseJoinColumns = {@JoinColumn(name="module_id")}	
 	)
 	private Set<Module> modules;
 	
-	@OneToMany(mappedBy = "course")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
 	private Set<StudentCourse> studentCourses;
 	
-	@ManyToMany(mappedBy = "courses")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "courses")
 	private Set<Lecturer> lecturers;
 
 	public Set<Lecturer> getLecturers() {

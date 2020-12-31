@@ -9,11 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,7 +34,7 @@ public class StudentController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> show(@RequestParam Integer id)
+	public ResponseEntity<?> show(@PathVariable Integer id)
 	{
 		if(studentRepository.existsById(id))
 			return new ResponseEntity<>(studentService.find(id), HttpStatus.OK);
@@ -52,7 +52,7 @@ public class StudentController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@RequestParam Integer id, @RequestBody Student student)
+	public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Student student)
 	{
 		studentRepository.save(student);
 		
