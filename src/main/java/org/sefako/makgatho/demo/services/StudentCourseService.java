@@ -35,21 +35,15 @@ public class StudentCourseService {
 		return studentCourseRepository.findById(id).get();
 	}
 	
-	public boolean save(StudentCourseDTO studentCourseDTO)
+	public void save(StudentCourseDTO studentCourseDTO)
 	{
-		if(studentRepository.existsById(studentCourseDTO.getStudent_id()) && courseRepository.existsById(studentCourseDTO.getCourse_id()))
-		{
-			Student student = studentRepository.findById(studentCourseDTO.getStudent_id()).get();
-			Course course = courseRepository.findById(studentCourseDTO.getCourse_id()).get();
-			
-			StudentCourse studentCourse = new StudentCourse();
-			studentCourse.setStudent(student);
-			studentCourse.setCourse(course);
-			studentCourse.setRegisteredAt(new Date());
-			studentCourseRepository.save(studentCourse);
-			
-			return true;
-		}else
-			return false;
+		Student student = studentRepository.findById(studentCourseDTO.getStudent_id()).get();
+		Course course = courseRepository.findById(studentCourseDTO.getCourse_id()).get();
+		
+		StudentCourse studentCourse = new StudentCourse();
+		studentCourse.setStudent(student);
+		studentCourse.setCourse(course);
+		studentCourse.setRegisteredAt(new Date());
+		studentCourseRepository.save(studentCourse);
 	}
 }

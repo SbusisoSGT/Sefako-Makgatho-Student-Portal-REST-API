@@ -121,4 +121,12 @@ public class Course {
 	public void setStudentCourses(Set<StudentCourse> studentCourses) {
 		this.studentCourses = studentCourses;
 	}
+	
+	public boolean isPostGraduateCourse()
+	{
+		if(this.qualification.getId() == 1 || this.qualification.getId() == 2)
+			return false;
+			
+		return true;
+	}
 }
