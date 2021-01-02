@@ -42,7 +42,7 @@ public class StudentModuleService {
 	{
 		StudentModule module = new StudentModule();
 		module.setCourse(studentCourseRepository.findById(studentModuleDTO.getStudent_course_id()).get());
-		module.setModule(moduleRepository.findById(studentModuleDTO.getModule_id()).get());
+		//module.setModule(moduleRepository.findById(studentModuleDTO.getModule_id()).get());
 		module.setRegisteredAt(new Date());
 		
 		studentModuleRepository.save(module);

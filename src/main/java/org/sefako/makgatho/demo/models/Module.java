@@ -29,11 +29,11 @@ public class Module {
 	private boolean prerequisite;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "module")
+	private Set<CourseModule> courseModules;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "module")
 	private Set<StudentModule> studentModules;
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "modules")
-	private Set<Course> courses;
-	
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "modules")
 	private Set<Lecturer> lecturers;
 
@@ -93,6 +93,14 @@ public class Module {
 		this.prerequisite = prerequisite;
 	}
 
+	public Set<CourseModule> getCourseModules() {
+		return courseModules;
+	}
+
+	public void setCourseModules(Set<CourseModule> courseModules) {
+		this.courseModules = courseModules;
+	}
+
 	public Set<StudentModule> getStudentModules() {
 		return studentModules;
 	}
@@ -100,14 +108,4 @@ public class Module {
 	public void setStudentModules(Set<StudentModule> studentModules) {
 		this.studentModules = studentModules;
 	}
-
-	public Set<Course> getCourses() {
-		return courses;
-	}
-
-	public void setCourses(Set<Course> courses) {
-		this.courses = courses;
-	}
-	
-	
 }

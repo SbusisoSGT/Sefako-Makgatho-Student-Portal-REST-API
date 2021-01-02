@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.sefako.makgatho.demo.models.Module;
 import org.sefako.makgatho.demo.models.Course;
+import org.sefako.makgatho.demo.models.CourseModule;
 import org.sefako.makgatho.demo.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,9 +35,9 @@ public class CourseController {
 	}
 	
 	@GetMapping("/{id}/modules")
-	public Set<Module> courseModules(@PathVariable Integer id)
+	public Set<CourseModule> courseModules(@PathVariable Integer id)
 	{
 		Course course = courseRepository.findById(id).get();
-		return course.getModules();
+		return course.getCourseModules();
 	}
 }

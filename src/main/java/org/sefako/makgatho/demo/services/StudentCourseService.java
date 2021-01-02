@@ -1,14 +1,20 @@
 package org.sefako.makgatho.demo.services;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.sefako.makgatho.demo.models.Course;
+import org.sefako.makgatho.demo.models.CourseModule;
+import org.sefako.makgatho.demo.models.Module;
 import org.sefako.makgatho.demo.models.Student;
 import org.sefako.makgatho.demo.models.StudentCourse;
+import org.sefako.makgatho.demo.models.StudentModule;
 import org.sefako.makgatho.demo.models.dto.StudentCourseDTO;
 import org.sefako.makgatho.demo.repositories.CourseRepository;
 import org.sefako.makgatho.demo.repositories.StudentCourseRepository;
+import org.sefako.makgatho.demo.repositories.StudentModuleRepository;
 import org.sefako.makgatho.demo.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +27,10 @@ public class StudentCourseService {
 	
 	@Autowired
 	CourseRepository courseRepository;
+	
+	
+	@Autowired
+	StudentModuleRepository studentModuleRepository;
 	
 	@Autowired
 	StudentCourseRepository studentCourseRepository;
@@ -50,18 +60,41 @@ public class StudentCourseService {
 		studentCourse.setCourse(course);
 		studentCourse.setRegisteredAt(new Date());
 		studentCourse.setCurrentLevel(1);
-		
 		studentCourseRepository.save(studentCourse);
+		
+		this.registerCompulsoryModules(studentCourse);
 	}
 	
 	public void update(Integer id, StudentCourse studentCourse)
 	{
-		//StudentCourse course = studentCourseRepository.findById(id).get();
-		
+		//
 	}
 	
 	public void delete(Integer id) 
 	{
 		studentCourseRepository.deleteById(id);
+	}
+	
+	private void registerCompulsoryModules(StudentCourse studentCourse)
+	{
+		Set<CourseModule> courseModules = studentCourse.getCourse().getCourseModules();
+		courseModules.removeIf(thiscourse -> (thiscourse.isCompulsory() == false));
+		
+		Set<Module> modules = new HashSet<Module>();
+		courseModules.forEach(thiscourse -> {
+			modules.add(thiscourse.getModule());
+		});
+
+		modules.removeIf(thismodule -> (
+			thismodule.getYear() != 1	
+		));
+		
+		modules.forEach(thismodule -> {
+			StudentModule studentModule = new StudentModule();
+			studentModule.setCourse(studentCourse);
+			studentModule.setModule(thismodule);
+			studentModule.setRegisteredAt(new Date());
+			studentModuleRepository.save(studentModule);
+		});
 	}
 }

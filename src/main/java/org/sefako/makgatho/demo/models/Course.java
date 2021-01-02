@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -37,19 +36,23 @@ public class Course {
 	@JoinColumn(name = "school_id")
 	private School school;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name="course_modules", 
-		joinColumns = { @JoinColumn(name="course_id")},
-		inverseJoinColumns = {@JoinColumn(name="module_id")}	
-	)
-	private Set<Module> modules;
-	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
+	private Set<CourseModule> courseModules;
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
 	private Set<StudentCourse> studentCourses;
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "courses")
 	private Set<Lecturer> lecturers;
 
+	public Set<CourseModule> getCourseModules() {
+		return courseModules;
+	}
+
+	public void setCourseModules(Set<CourseModule> courseModules) {
+		this.courseModules = courseModules;
+	}
+	
 	public Set<Lecturer> getLecturers() {
 		return lecturers;
 	}
@@ -104,14 +107,6 @@ public class Course {
 
 	public void setSchool(School school) {
 		this.school = school;
-	}
-
-	public Set<Module> getModules() {
-		return modules;
-	}
-
-	public void setModules(Set<Module> modules) {
-		this.modules = modules;
 	}
 
 	public Set<StudentCourse> getStudentCourses() {

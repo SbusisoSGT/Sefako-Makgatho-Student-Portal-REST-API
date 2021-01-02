@@ -58,9 +58,11 @@ public class StudentCourseController {
 	{
 		if(studentRepository.existsById(studentCourseDTO.getStudent_id()) && courseRepository.existsById(studentCourseDTO.getCourse_id()))
 		{
-			if(this.completedAllCourses(studentCourseDTO.getStudent_id()))
+			Student student = studentRepository.findById(studentCourseDTO.getStudent_id()).get();
+			
+			if(this.completedAllCourses(student.getId()))
 			{
-				if(passedPreviousCourse(studentCourseDTO.getStudent_id()))
+				if(passedPreviousCourse(student.getId()))
 				{
 					studentCourseService.save(studentCourseDTO);
 					return new ResponseEntity<>("Student course registered!", HttpStatus.CREATED);
@@ -96,22 +98,24 @@ public class StudentCourseController {
 	
 	private boolean passedPreviousCourse(Integer student_id)
 	{
-		boolean passedPreviousCourse = false;
+		boolean passedPreviousCourse = true;
 		
 		Student student = studentRepository.findById(student_id).get();
 		
-		StudentCourse completedCourse = (StudentCourse) student.getStudentCourses().toArray()[student.getStudentCourses().size() - 1];
-		Set<StudentModule> studentModules = completedCourse.getStudentModules();
-		int sum = 0;
-		double average = 0.0;
-		
-		for(StudentModule module: studentModules)
-			sum += module.getGrade();
-		
-		average = sum / studentModules.size();
-		
-		if(average >=  60.0)
-			passedPreviousCourse = true;
+		if(student.getStudentCourses().size() > 0) {
+			StudentCourse completedCourse = (StudentCourse) student.getStudentCourses().toArray()[student.getStudentCourses().size() - 1];
+			Set<StudentModule> studentModules = completedCourse.getStudentModules();
+			int sum = 0;
+			double average = 0.0;
+			
+			for(StudentModule module: studentModules)
+				sum += module.getGrade();
+			
+			average = sum / studentModules.size();
+			
+			if(average <=  60.0)
+				passedPreviousCourse = false;
+		}
 		
 		return passedPreviousCourse;
 	}
