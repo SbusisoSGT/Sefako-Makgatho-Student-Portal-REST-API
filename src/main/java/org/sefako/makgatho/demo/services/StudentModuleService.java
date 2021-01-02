@@ -33,17 +33,31 @@ public class StudentModuleService {
 		return studentModuleRepository.findById(id).get();
 	}
 	
-	public boolean save(StudentModuleDTO studentModuleDTO)
+	public boolean exists(Integer id)
 	{
-		if(studentCourseRepository.existsById(studentModuleDTO.getStudent_course_id()) && moduleRepository.existsById(studentModuleDTO.getModule_id()))
-		{
-			StudentModule module = new StudentModule();
-			module.setCourse(studentCourseRepository.findById(studentModuleDTO.getStudent_course_id()).get());
-			module.setModule(moduleRepository.findById(studentModuleDTO.getModule_id()).get());
-			module.setRegisteredAt(new Date());
-			studentModuleRepository.save(module);
-			return true;
-		}else
-			return false;
+		return studentModuleRepository.existsById(id);
+	}
+	
+	public void save(StudentModuleDTO studentModuleDTO)
+	{
+		StudentModule module = new StudentModule();
+		module.setCourse(studentCourseRepository.findById(studentModuleDTO.getStudent_course_id()).get());
+		module.setModule(moduleRepository.findById(studentModuleDTO.getModule_id()).get());
+		module.setRegisteredAt(new Date());
+		
+		studentModuleRepository.save(module);
+	}
+	
+	public void update(Integer id, StudentModule studentModule)
+	{
+		StudentModule module = studentModuleRepository.findById(id).get();
+		module.setGrade(studentModule.getGrade());
+		module.setCompleted(studentModule.isCompleted());
+		studentModuleRepository.save(module);
+	}
+	
+	public void delete(Integer id)
+	{
+		studentModuleRepository.deleteById(id);
 	}
 }

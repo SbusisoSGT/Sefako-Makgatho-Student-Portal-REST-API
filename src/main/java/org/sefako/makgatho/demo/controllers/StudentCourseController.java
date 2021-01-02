@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,18 +63,35 @@ public class StudentCourseController {
 				if(passedPreviousCourse(studentCourseDTO.getStudent_id()))
 				{
 					studentCourseService.save(studentCourseDTO);
-					return new ResponseEntity<>("Student failed to obtain average of 60% in previous grade assessments", HttpStatus.FORBIDDEN);
+					return new ResponseEntity<>("Student course registered!", HttpStatus.CREATED);
 					
 				}else {
-					return new ResponseEntity<>("Student must complete their current course before registering new one", HttpStatus.FORBIDDEN);
+					return new ResponseEntity<>("Student failed to obtain average of 60% in previous grade assessments!", HttpStatus.FORBIDDEN);
 				}
 					
 			}else {
-				return new ResponseEntity<>("Student must complete their current course before registering new one", HttpStatus.FORBIDDEN);
+				return new ResponseEntity<>("Student must complete their current course before registering new one!", HttpStatus.FORBIDDEN);
 			}
 			
 		}else
 			return new ResponseEntity<>("Student or Course Not Found", HttpStatus.NOT_FOUND);
+	}
+	
+	@PutMapping("/{id}")
+	public void update(@PathVariable Integer id, @RequestBody StudentCourse studentCourse)
+	{
+		//
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> delete(@PathVariable Integer id)
+	{
+		if(studentCourseService.exists(id))
+		{
+			studentCourseService.delete(id);
+			return new ResponseEntity<>("Student course deleted", HttpStatus.OK);
+		}else
+			return new ResponseEntity<>("Student course not found!", HttpStatus.NOT_FOUND);
 	}
 	
 	private boolean passedPreviousCourse(Integer student_id)

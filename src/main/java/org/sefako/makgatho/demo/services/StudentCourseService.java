@@ -25,6 +25,11 @@ public class StudentCourseService {
 	@Autowired
 	StudentCourseRepository studentCourseRepository;
 	
+	public boolean exists(Integer id)
+	{
+		return studentCourseRepository.existsById(id);
+	}
+	
 	public List<StudentCourse> all()
 	{
 		return studentCourseRepository.findAll();
@@ -44,6 +49,19 @@ public class StudentCourseService {
 		studentCourse.setStudent(student);
 		studentCourse.setCourse(course);
 		studentCourse.setRegisteredAt(new Date());
+		studentCourse.setCurrentLevel(1);
+		
 		studentCourseRepository.save(studentCourse);
+	}
+	
+	public void update(Integer id, StudentCourse studentCourse)
+	{
+		//StudentCourse course = studentCourseRepository.findById(id).get();
+		
+	}
+	
+	public void delete(Integer id) 
+	{
+		studentCourseRepository.deleteById(id);
 	}
 }
