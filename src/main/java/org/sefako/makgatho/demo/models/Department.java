@@ -1,14 +1,16 @@
 package org.sefako.makgatho.demo.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "departments")
@@ -19,8 +21,9 @@ public class Department {
 	private Integer id;
 	private String name;
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "departments")
-	private Set<School> schools;
+	@ManyToMany(mappedBy = "departments")
+	@JsonManagedReference
+	private Set<School> schools = new HashSet<>();
 	
 	public Integer getId() {
 		return id;

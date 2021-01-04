@@ -75,6 +75,11 @@ public class StudentCourseService {
 		studentCourseRepository.deleteById(id);
 	}
 	
+	public Set<StudentModule> studentCourseModules(Integer id)
+	{
+		return studentCourseRepository.findById(id).get().getStudentModules();
+	}
+	
 	private void registerCompulsoryModules(StudentCourse studentCourse)
 	{
 		Set<CourseModule> courseModules = studentCourse.getCourse().getCourseModules();

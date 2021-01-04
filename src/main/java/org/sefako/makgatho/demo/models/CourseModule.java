@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "course_modules")
 public class CourseModule {
@@ -19,10 +21,12 @@ public class CourseModule {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id")
+	@JsonManagedReference
 	private Course course;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "module_id")
+	@JsonManagedReference
 	private Module module;
 	
 	@Column(columnDefinition = "boolean default false")

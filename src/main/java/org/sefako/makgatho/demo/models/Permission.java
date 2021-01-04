@@ -1,15 +1,16 @@
 package org.sefako.makgatho.demo.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "permissions")
@@ -20,8 +21,10 @@ public class Permission {
 	private Integer id;
 	private String name;
 	private String description;
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "permissions")
-	private Set<Role> roles;
+	
+	@ManyToMany(mappedBy = "permissions")
+	@JsonManagedReference
+	private Set<Role> roles = new HashSet<>();
 	
 	public Set<Role> getRoles() {
 		return roles;

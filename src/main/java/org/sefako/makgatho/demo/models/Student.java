@@ -1,9 +1,9 @@
 package org.sefako.makgatho.demo.models;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "students")
@@ -27,10 +30,12 @@ public class Student{
 	
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
+	@JsonManagedReference
 	private User user;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "student")
-	private Set<StudentCourse> studentCourses;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
+	@JsonBackReference
+	private Set<StudentCourse> studentCourses = new HashSet<>();
 	
 	private Date registeredAt;
 	

@@ -1,8 +1,8 @@
 package org.sefako.makgatho.demo.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -25,11 +28,13 @@ public class User{
 	private String lastname;
 	private String password;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
-	private Set<Student> students;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	@JsonBackReference
+	private Set<Student> students = new HashSet<>();
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "users")
-	private Set<Role> roles;
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
+	@JsonManagedReference
+	private Set<Role> roles = new HashSet<>();
 	
 	public Set<Role> getRoles() {
 		return roles;

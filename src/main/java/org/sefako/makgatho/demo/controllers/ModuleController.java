@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @CrossOrigin
+@RestController
 @RequestMapping("/modules")
 public class ModuleController {
 
 	@Autowired
 	ModuleRepository moduleRepository;
 	
-	@GetMapping("/")
+	@GetMapping
 	public List<Module> index()
 	{
 		return moduleRepository.findAll();

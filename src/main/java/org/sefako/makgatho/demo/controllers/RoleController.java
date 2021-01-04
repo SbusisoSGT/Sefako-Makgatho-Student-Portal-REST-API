@@ -26,13 +26,13 @@ public class RoleController {
 	@Autowired
 	RoleRepository roleRepository;
 	
-	@GetMapping("/")
+	@GetMapping
 	public List<Role> index()
 	{
 		return roleRepository.findAll();
 	}
 	
-	@PostMapping("/")
+	@PostMapping
 	public ResponseEntity<?> store(@RequestBody Role role)
 	{
 		roleRepository.save(role);

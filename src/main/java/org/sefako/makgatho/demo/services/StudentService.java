@@ -7,9 +7,12 @@ import java.util.Set;
 
 import org.sefako.makgatho.demo.models.Role;
 import org.sefako.makgatho.demo.models.Student;
+import org.sefako.makgatho.demo.models.StudentCourse;
+import org.sefako.makgatho.demo.models.StudentModule;
 import org.sefako.makgatho.demo.models.User;
 import org.sefako.makgatho.demo.models.dto.StudentDTO;
 import org.sefako.makgatho.demo.repositories.RoleRepository;
+import org.sefako.makgatho.demo.repositories.StudentCourseRepository;
 import org.sefako.makgatho.demo.repositories.StudentRepository;
 import org.sefako.makgatho.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,9 @@ public class StudentService {
 
 	@Autowired
 	StudentRepository studentRepository;
+	
+	@Autowired
+	StudentCourseRepository studentCourseRepository;
 	
 	@Autowired
 	RoleRepository roleRepository;
@@ -67,6 +73,16 @@ public class StudentService {
 	public void update(StudentDTO StudentDTO)
 	{
 		//
+	}
+	
+	public Set<StudentCourse> studentCourses(Integer id)
+	{
+		return studentRepository.findById(id).get().getStudentCourses();
+	}
+	
+	public Set<StudentModule> studentCourseModules(Integer student_course_id)
+	{
+		return studentCourseRepository.findById(student_course_id).get().getStudentModules();
 	}
 }
 

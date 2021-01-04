@@ -1,5 +1,6 @@
 package org.sefako.makgatho.demo.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -11,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="roles")
 public class Role {
@@ -19,14 +22,23 @@ public class Role {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 	private String name;
-	
 
 	@ManyToMany()
 	@JoinTable(name="role_permissions", 
 		joinColumns = { @JoinColumn(name="role_id")},
 		inverseJoinColumns = {@JoinColumn(name="permission_id")}	
 	)
-	private Set<Permission> permissions;
+	@JsonBackReference
+	private Set<Permission> permissions = new HashSet<>();
+	
+	@ManyToMany()
+	@JoinTable(name="role_users", 
+		joinColumns = { @JoinColumn(name="role_id")},
+		inverseJoinColumns = {@JoinColumn(name="user_id")}	
+	)
+	@JsonBackReference
+	private Set<User> users = new HashSet<>();
+	
 	
 	public Set<User> getUsers() {
 		return users;
@@ -39,13 +51,6 @@ public class Role {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	@ManyToMany()
-	@JoinTable(name="role_users", 
-		joinColumns = { @JoinColumn(name="role_id")},
-		inverseJoinColumns = {@JoinColumn(name="user_id")}	
-	)
-	private Set<User> users;
 	
 	public String getName() {
 		return name;

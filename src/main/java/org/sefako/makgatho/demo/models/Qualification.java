@@ -1,8 +1,8 @@
 package org.sefako.makgatho.demo.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "qualifications")
@@ -20,8 +22,9 @@ public class Qualification {
 	private Integer id;
 	private String name;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "qualification")
-	private Set<Course> courses;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "qualification")
+	@JsonBackReference
+	private Set<Course> courses = new HashSet<>();
 	
 	public Integer getId() {
 		return id;

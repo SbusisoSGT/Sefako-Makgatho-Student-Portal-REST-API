@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "student_modules")
 public class StudentModule {
@@ -29,10 +31,12 @@ public class StudentModule {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "student_course_id")
+	@JsonManagedReference
 	private StudentCourse course;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "module_id")
+	@JsonManagedReference
 	private Module module;
 	
 	public Integer getId() {

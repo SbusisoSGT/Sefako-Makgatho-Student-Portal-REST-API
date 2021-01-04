@@ -1,5 +1,6 @@
 package org.sefako.makgatho.demo.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -11,6 +12,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "lecturers")
@@ -25,17 +29,20 @@ public class Lecturer{
 		joinColumns = { @JoinColumn(name="lecturer_id")},
 		inverseJoinColumns = {@JoinColumn(name="module_id")}	
 	)
-	private Set<Module> modules;
+	@JsonBackReference
+	private Set<Module> modules = new HashSet<>();
 	
 	@ManyToMany()
 	@JoinTable(name="lecturer_courses", 
 		joinColumns = { @JoinColumn(name="lecturer_id")},
 		inverseJoinColumns = {@JoinColumn(name="course_id")}	
 	)
-	private Set<Course> courses;
+	@JsonBackReference
+	private Set<Course> courses = new HashSet<>();
 	
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
+	@JsonManagedReference
 	private User user;
 	
 	public Integer getId() {

@@ -1,8 +1,8 @@
 package org.sefako.makgatho.demo.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +14,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "courses")
@@ -30,20 +33,25 @@ public class Course {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "qualification_id")
+	@JsonManagedReference
 	private Qualification qualification;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "school_id")
+	@JsonManagedReference
 	private School school;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
-	private Set<CourseModule> courseModules;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+	@JsonBackReference
+	private Set<CourseModule> courseModules = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
-	private Set<StudentCourse> studentCourses;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+	@JsonBackReference
+	private Set<StudentCourse> studentCourses = new HashSet<>();
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "courses")
-	private Set<Lecturer> lecturers;
+	@ManyToMany(mappedBy = "courses")
+	@JsonBackReference
+	private Set<Lecturer> lecturers = new HashSet<>();
 
 	public Set<CourseModule> getCourseModules() {
 		return courseModules;

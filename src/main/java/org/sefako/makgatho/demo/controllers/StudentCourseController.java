@@ -96,6 +96,13 @@ public class StudentCourseController {
 			return new ResponseEntity<>("Student course not found!", HttpStatus.NOT_FOUND);
 	}
 	
+	
+	@GetMapping("/{id}/modules")
+	public Set<StudentModule> allStudentCourseModules(@PathVariable Integer id)
+	{
+		return studentCourseService.studentCourseModules(id);
+	}
+	
 	private boolean passedPreviousCourse(Integer student_id)
 	{
 		boolean passedPreviousCourse = true;

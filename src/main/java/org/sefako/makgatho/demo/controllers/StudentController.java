@@ -1,6 +1,10 @@
 package org.sefako.makgatho.demo.controllers;
 
+import java.util.List;
+import java.util.Set;
+
 import org.sefako.makgatho.demo.models.Student;
+import org.sefako.makgatho.demo.models.StudentCourse;
 import org.sefako.makgatho.demo.models.dto.StudentDTO;
 import org.sefako.makgatho.demo.repositories.StudentRepository;
 import org.sefako.makgatho.demo.services.StudentService;
@@ -28,9 +32,9 @@ public class StudentController {
 	StudentRepository studentRepository;
 	
 	@GetMapping("/")
-	public ResponseEntity<?> index()
+	public List<Student> index()
 	{
-		return new ResponseEntity<>(studentService.all(), HttpStatus.OK);
+		return studentService.all();
 	}
 	
 	@GetMapping("/{id}")
@@ -39,7 +43,7 @@ public class StudentController {
 		if(studentRepository.existsById(id))
 			return new ResponseEntity<>(studentService.find(id), HttpStatus.OK);
 		else
-			return new ResponseEntity<>("Student course Not Found", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Student Not Found", HttpStatus.NOT_FOUND);
 	}
 	
 	@PostMapping("/")
@@ -58,4 +62,11 @@ public class StudentController {
 		
 		return new ResponseEntity<String>("Student updated successful!", HttpStatus.CREATED);
 	}	
+	
+	@GetMapping("/{id}/courses/")
+	public Set<StudentCourse> allStudentCourses(@PathVariable Integer id)
+	{
+		return studentService.studentCourses(id);
+	}
+
 }
