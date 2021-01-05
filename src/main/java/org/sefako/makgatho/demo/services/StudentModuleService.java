@@ -2,12 +2,16 @@ package org.sefako.makgatho.demo.services;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import org.sefako.makgatho.demo.models.StudentCourse;
 import org.sefako.makgatho.demo.models.StudentModule;
 import org.sefako.makgatho.demo.models.dto.StudentModuleDTO;
+import org.sefako.makgatho.demo.models.dto.StudentModuleGradeDTO;
 import org.sefako.makgatho.demo.repositories.ModuleRepository;
 import org.sefako.makgatho.demo.repositories.StudentCourseRepository;
 import org.sefako.makgatho.demo.repositories.StudentModuleRepository;
+import org.sefako.makgatho.demo.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +26,9 @@ public class StudentModuleService {
 	
 	@Autowired
 	StudentCourseRepository studentCourseRepository;
+	
+	@Autowired
+	StudentRepository studentRepository;
 	
 	public List<StudentModule> all()
 	{
@@ -42,18 +49,45 @@ public class StudentModuleService {
 	{
 		StudentModule module = new StudentModule();
 		module.setCourse(studentCourseRepository.findById(studentModuleDTO.getStudent_course_id()).get());
-		//module.setModule(moduleRepository.findById(studentModuleDTO.getModule_id()).get());
+		module.setModule(moduleRepository.findById(studentModuleDTO.getModule_id()).get());
 		module.setRegisteredAt(new Date());
 		
 		studentModuleRepository.save(module);
 	}
 	
-	public void update(Integer id, StudentModule studentModule)
+	public void updateModuleGrade(Integer id, StudentModuleGradeDTO gradeDTO)
 	{
 		StudentModule module = studentModuleRepository.findById(id).get();
-		module.setGrade(studentModule.getGrade());
-		module.setCompleted(studentModule.isCompleted());
+		module.setGrade(gradeDTO.getGrade());
+		module.setCompleted(true);
 		studentModuleRepository.save(module);
+	}
+	
+	public void updateCurrentYear(StudentCourse course)
+	{			
+		if(course.getCurrentLevel() == course.getCourse().getDuration())
+			course.setCompleted(true);
+		else
+			course.setCurrentLevel(course.getCurrentLevel() + 1);
+		studentCourseRepository.save(course);
+	}
+	
+	public void s(Integer module_id)
+	{
+		StudentCourse course = this.getStudentCourse(module_id);
+		if(course.passedYearModules()) {
+			this.updateCurrentYear(course);
+			
+		}else {
+			Set<StudentModule> failedModules = course.getFailedModules();
+			
+		}
+			
+	}
+	
+	public StudentCourse getStudentCourse(Integer module_id)
+	{
+		return studentModuleRepository.findById(module_id).get().getCourse();
 	}
 	
 	public void delete(Integer id)

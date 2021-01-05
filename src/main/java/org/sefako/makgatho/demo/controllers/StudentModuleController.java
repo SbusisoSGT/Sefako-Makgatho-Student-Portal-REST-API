@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.sefako.makgatho.demo.models.StudentModule;
 import org.sefako.makgatho.demo.models.dto.StudentModuleDTO;
+import org.sefako.makgatho.demo.models.dto.StudentModuleGradeDTO;
 import org.sefako.makgatho.demo.repositories.ModuleRepository;
 import org.sefako.makgatho.demo.repositories.StudentCourseRepository;
 import org.sefako.makgatho.demo.repositories.StudentModuleRepository;
@@ -14,13 +15,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+//import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author sbusi
+ *
+ */
 @RestController
 @CrossOrigin
 @RequestMapping("/students/modules/")
@@ -37,6 +43,7 @@ public class StudentModuleController {
 	
 	@Autowired
 	StudentModuleRepository studentModuleRepository;
+	
 	
 	@GetMapping("/")
 	public List<StudentModule> index()
@@ -62,17 +69,27 @@ public class StudentModuleController {
 			return new ResponseEntity<>("Student or Module Not Found", HttpStatus.NOT_FOUND);
 	}
 	
-	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody StudentModule studentModule)
+	
+	@PatchMapping("/{id}/grade")
+	public ResponseEntity<?> updateStudentModuleGrade(@PathVariable Integer id, @RequestBody StudentModuleGradeDTO gradeDTO)
 	{
 		if(studentModuleService.exists(id))
 		{
-			studentModuleService.update(id, studentModule);
+			studentModuleService.updateModuleGrade(id, gradeDTO);
+			
+			//studentModuleService.updateCurrentYear(id);
+			
 			return new ResponseEntity<>("Student module updated successfully!", HttpStatus.OK);
 		}else
 			return new ResponseEntity<>("Student Module Not Found", HttpStatus.NOT_FOUND);
 	}
 	
+	/**
+	 * Delete module resource
+	 * 
+	 * @param Integer id
+	 * @return ResponseEntity
+	 */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Integer id)
 	{

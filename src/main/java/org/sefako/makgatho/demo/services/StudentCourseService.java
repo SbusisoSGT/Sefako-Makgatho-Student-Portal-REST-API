@@ -65,9 +65,9 @@ public class StudentCourseService {
 		this.registerCompulsoryModules(studentCourse);
 	}
 	
-	public void update(Integer id, StudentCourse studentCourse)
+	public void updateCourseLevel(Integer id, StudentCourse studentCourse)
 	{
-		//
+		
 	}
 	
 	public void delete(Integer id) 

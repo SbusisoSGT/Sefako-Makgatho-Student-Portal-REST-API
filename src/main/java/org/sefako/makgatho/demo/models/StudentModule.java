@@ -29,6 +29,8 @@ public class StudentModule {
 	
 	private Date registeredAt;
 	
+	private int academic_year;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "student_course_id")
 	@JsonManagedReference
@@ -85,5 +87,13 @@ public class StudentModule {
 
 	public void setRegisteredAt(Date registeredAt) {
 		this.registeredAt = registeredAt;
+	}
+
+	public int getAcademic_year() {
+		return academic_year;
+	}
+
+	public void setAcademic_year(int academic_year) {
+		this.academic_year = academic_year;
 	}
 }

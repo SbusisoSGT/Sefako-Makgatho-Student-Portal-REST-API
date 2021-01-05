@@ -53,8 +53,8 @@ public class StudentCourseController {
 		return studentCourseService.find(id);
 	}
 	
-	@PostMapping("/")
-	public ResponseEntity<?> store(@RequestBody StudentCourseDTO studentCourseDTO)
+	@PostMapping("/postgraduate/")
+	public ResponseEntity<?> registerPostgrad(@RequestBody StudentCourseDTO studentCourseDTO)
 	{
 		if(studentRepository.existsById(studentCourseDTO.getStudent_id()) && courseRepository.existsById(studentCourseDTO.getCourse_id()))
 		{
@@ -77,6 +77,24 @@ public class StudentCourseController {
 			
 		}else
 			return new ResponseEntity<>("Student or Course Not Found", HttpStatus.NOT_FOUND);
+	}
+	
+	@PostMapping("/undergraduate/")
+	public ResponseEntity<?> registerUndergrad(@RequestBody StudentCourseDTO studentCourseDTO)
+	{
+		if(studentRepository.existsById(studentCourseDTO.getStudent_id()) && courseRepository.existsById(studentCourseDTO.getCourse_id()))
+		{
+			studentCourseService.save(studentCourseDTO);
+			return new ResponseEntity<>("Student course registered!", HttpStatus.CREATED);
+			
+		}else
+			return new ResponseEntity<>("Student or Course Not Found", HttpStatus.NOT_FOUND);
+	}
+	
+	@PutMapping("/{id}/completed")
+	public void courseCompleted(@PathVariable Integer id, @RequestBody StudentCourse studentCourse)
+	{
+		//
 	}
 	
 	@PutMapping("/{id}")

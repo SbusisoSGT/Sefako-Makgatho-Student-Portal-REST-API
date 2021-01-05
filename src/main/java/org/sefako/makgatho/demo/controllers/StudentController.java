@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 @RequestMapping("/students")
-public class StudentController {
+public class StudentController{
 
 	@Autowired
 	StudentService studentService;
@@ -68,5 +68,4 @@ public class StudentController {
 	{
 		return studentService.studentCourses(id);
 	}
-
 }

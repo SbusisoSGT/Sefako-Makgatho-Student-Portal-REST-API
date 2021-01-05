@@ -104,5 +104,71 @@ public class StudentCourse{
 		this.currentLevel = currentLevel;
 	}
 	
+	public Set<StudentModule> getCurrentYearModules()
+	{
+		Set<StudentModule> modules = this.getStudentModules();
+		
+		modules.removeIf(thismodule -> (thismodule.getModule().getYear() != this.getCurrentLevel()));		
+		return modules;
+	}
+	
+	public boolean completedYearModules()
+	{
+		boolean completedYearModules = true;
+
+		Set<StudentModule> modules = this.getCurrentYearModules();
+	
+		for(StudentModule thismodule: modules)
+		{
+			if(thismodule.isCompleted() == false) {
+				completedYearModules = false;
+				break;
+			}
+		}
+		
+		return completedYearModules;
+	}
+	
+	public boolean passedYearModules()
+	{
+		boolean passedYearModules = true;
+		final int passGrade = 50;
+		
+		Set<StudentModule> modules = this.getCurrentYearModules();
+		
+		for(StudentModule thismodule: modules)
+		{
+			if(thismodule.getGrade() < passGrade) {
+				passedYearModules = false;
+				break;
+			}
+		}
+		return passedYearModules;
+	}
+	
+	public Set<StudentModule> getFailedModules()
+	{
+		final int passGrade = 50;
+		
+		Set<StudentModule> modules = this.getCurrentYearModules();
+		modules.removeIf(thismodule -> (thismodule.getGrade() >= passGrade));
+		
+		return modules;
+ 	}
+	
+	public boolean failedCompulsoryModules()
+	{
+		boolean failedCompulsoryModules = false;
+		Set<StudentModule> failedModules = this.getFailedModules();
+		
+		//Check if any of the failed module is compulsory
+		for(StudentModule thismodule: failedModules)
+		{
+			Set<CourseModule> courseModules = thismodule.getModule().getCourseModules();
+			//courseModules.removeIf(thiscourse -> ());
+			
+		}
+		return failedCompulsoryModules;
+	}
 	
 }
