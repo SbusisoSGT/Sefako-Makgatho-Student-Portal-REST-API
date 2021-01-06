@@ -41,7 +41,7 @@ public class StudentCourseController {
 	@Autowired
 	StudentCourseService studentCourseService;
 	
-	@GetMapping("/")
+	@GetMapping
 	public List<StudentCourse> index()
 	{
 		return studentCourseService.all();

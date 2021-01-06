@@ -31,7 +31,7 @@ public class StudentController{
 	@Autowired
 	StudentRepository studentRepository;
 	
-	@GetMapping("/")
+	@GetMapping
 	public List<Student> index()
 	{
 		return studentService.all();
@@ -46,7 +46,7 @@ public class StudentController{
 			return new ResponseEntity<>("Student Not Found", HttpStatus.NOT_FOUND);
 	}
 	
-	@PostMapping("/")
+	@PostMapping
 	public ResponseEntity<?> store(@RequestBody StudentDTO studentDTO)
 	{
 		if(studentService.save(studentDTO))

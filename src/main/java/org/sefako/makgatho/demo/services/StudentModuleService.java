@@ -72,18 +72,18 @@ public class StudentModuleService {
 		studentCourseRepository.save(course);
 	}
 	
-	public void s(Integer module_id)
-	{
-		StudentCourse course = this.getStudentCourse(module_id);
-		if(course.passedYearModules()) {
-			this.updateCurrentYear(course);
-			
-		}else {
-			Set<StudentModule> failedModules = course.getFailedModules();
-			
-		}
-			
-	}
+//	public void s(Integer module_id)
+//	{
+//		StudentCourse course = this.getStudentCourse(module_id);
+//		if(course.passedYearModules()) {
+//			this.updateCurrentYear(course);
+//			
+//		}else {
+//			Set<StudentModule> failedModules = course.getFailedModules();
+//			
+//		}
+//			
+//	}
 	
 	public StudentCourse getStudentCourse(Integer module_id)
 	{

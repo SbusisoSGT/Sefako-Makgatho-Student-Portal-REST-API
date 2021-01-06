@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -104,6 +105,7 @@ public class StudentCourse{
 		this.currentLevel = currentLevel;
 	}
 	
+	@Transient
 	public Set<StudentModule> getCurrentYearModules()
 	{
 		Set<StudentModule> modules = this.getStudentModules();
@@ -112,6 +114,7 @@ public class StudentCourse{
 		return modules;
 	}
 	
+	@Transient
 	public boolean completedYearModules()
 	{
 		boolean completedYearModules = true;
@@ -129,6 +132,7 @@ public class StudentCourse{
 		return completedYearModules;
 	}
 	
+	@Transient
 	public boolean passedYearModules()
 	{
 		boolean passedYearModules = true;
@@ -146,6 +150,7 @@ public class StudentCourse{
 		return passedYearModules;
 	}
 	
+	@Transient
 	public Set<StudentModule> getFailedModules()
 	{
 		final int passGrade = 50;
@@ -156,6 +161,7 @@ public class StudentCourse{
 		return modules;
  	}
 	
+	@Transient
 	public boolean failedCompulsoryModules()
 	{
 		boolean failedCompulsoryModules = false;
