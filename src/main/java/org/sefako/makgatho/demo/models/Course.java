@@ -30,7 +30,8 @@ public class Course {
 	@Column(unique = true)
 	private String code;
 	private int duration;
-	
+	private int capacity;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "qualification_id")
 	@JsonManagedReference
@@ -131,5 +132,13 @@ public class Course {
 			return false;
 			
 		return true;
+	}
+	
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
 	}
 }

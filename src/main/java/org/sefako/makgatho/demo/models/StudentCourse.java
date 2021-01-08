@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -48,6 +47,17 @@ public class StudentCourse{
 	
 	@Column(columnDefinition = "INT default 1")
 	private int currentLevel;
+	
+	@Column(columnDefinition = "boolean default false")
+	private boolean approved;
+	
+	public boolean isApproved() {
+		return approved;
+	}
+
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
 
 	public Integer getId() {
 		return id;
@@ -104,77 +114,4 @@ public class StudentCourse{
 	public void setCurrentLevel(int currentLevel) {
 		this.currentLevel = currentLevel;
 	}
-	
-	@Transient
-	public Set<StudentModule> getCurrentYearModules()
-	{
-		Set<StudentModule> modules = this.getStudentModules();
-		
-		modules.removeIf(thismodule -> (thismodule.getModule().getYear() != this.getCurrentLevel()));		
-		return modules;
-	}
-	
-	@Transient
-	public boolean completedYearModules()
-	{
-		boolean completedYearModules = true;
-
-		Set<StudentModule> modules = this.getCurrentYearModules();
-	
-		for(StudentModule thismodule: modules)
-		{
-			if(thismodule.isCompleted() == false) {
-				completedYearModules = false;
-				break;
-			}
-		}
-		
-		return completedYearModules;
-	}
-	
-	@Transient
-	public boolean passedYearModules()
-	{
-		boolean passedYearModules = true;
-		final int passGrade = 50;
-		
-		Set<StudentModule> modules = this.getCurrentYearModules();
-		
-		for(StudentModule thismodule: modules)
-		{
-			if(thismodule.getGrade() < passGrade) {
-				passedYearModules = false;
-				break;
-			}
-		}
-		return passedYearModules;
-	}
-	
-	@Transient
-	public Set<StudentModule> getFailedModules()
-	{
-		final int passGrade = 50;
-		
-		Set<StudentModule> modules = this.getCurrentYearModules();
-		modules.removeIf(thismodule -> (thismodule.getGrade() >= passGrade));
-		
-		return modules;
- 	}
-	
-	@Transient
-	public boolean failedCompulsoryModules()
-	{
-		boolean failedCompulsoryModules = false;
-		Set<StudentModule> failedModules = this.getFailedModules();
-		
-		//Check if any of the failed module is compulsory
-		for(StudentModule thismodule: failedModules)
-		{
-			Set<CourseModule> courseModules = thismodule.getModule().getCourseModules();
-			//courseModules.removeIf(thiscourse -> ());
-			
-		}
-		return failedCompulsoryModules;
-	}
-	
 }

@@ -33,6 +33,11 @@ public class StudentService {
 	@Autowired
 	UserRepository userRepository;
 	
+	public boolean exists(Integer id)
+	{
+		return studentRepository.existsById(id);
+	}
+	
 	public List<Student> all()
 	{
 		return studentRepository.findAll();
@@ -84,6 +89,131 @@ public class StudentService {
 	{
 		return studentCourseRepository.findById(student_course_id).get().getStudentModules();
 	}
+	
+	public boolean completedAllCourses(Integer student_id)
+	{
+		boolean completedAllCourses = true;
+		Set<StudentCourse> courses = this.find(student_id).getStudentCourses();
+		
+		for(StudentCourse course : courses)
+		{
+			if(!course.isCompleted())
+				completedAllCourses = false;	
+		}
+		
+		return completedAllCourses;
+	}
+	
+	public StudentCourse getStudentCurrentCourse(Integer student_id)
+	{
+		StudentCourse completedCourse = null;
+		
+		if(this.find(student_id).getStudentCourses().size() > 0)
+			completedCourse = (StudentCourse) this.find(student_id).getStudentCourses().toArray()[this.find(student_id).getStudentCourses().size() - 1];
+		
+		return completedCourse;
+	}
+	
+	public boolean passedCurrentYearModules(Integer student_id)
+	{
+		boolean passedYearModules = true;
+		final int passGrade = 50;
+	
+		Set<StudentModule> modules = this.getStudentCurrentYearModules(student_id);
+		
+		for(StudentModule thismodule: modules)
+		{
+			if(thismodule.getGrade() < passGrade) {
+				passedYearModules = false;
+				break;
+			}
+		}
+		return passedYearModules;
+	}
+	
+	public boolean passedPreviousCourse()
+	{
+		boolean passedPreviousCourse = false;
+		
+		//
+		
+		return passedPreviousCourse;
+	}
+	
+	public boolean qualifiesForPostgrad(Integer student_id)
+	{
+		boolean qualifiesForPostgrad = false;
+		
+		StudentCourse currentCourse = this.getStudentCurrentCourse(student_id);
+		if(currentCourse != null) {
+			Set<StudentModule> studentModules = currentCourse.getStudentModules();
+			int sum = 0;
+			double average = 0.0;
+			
+			for(StudentModule module: studentModules)
+				sum += module.getGrade();
+			
+			average = sum / studentModules.size();
+			
+			if(average >=  60.0)
+				qualifiesForPostgrad = true;
+		}
+		
+		return qualifiesForPostgrad;
+	}
+	
+	public Set<StudentModule> getStudentCurrentYearModules(Integer student_id)
+	{
+		StudentCourse currentCourse = this.getStudentCurrentCourse(student_id);
+		Set<StudentModule> modules = currentCourse.getStudentModules();
+		
+		modules.removeIf(thismodule -> (thismodule.getModule().getYear() != currentCourse.getCurrentLevel()));		
+		return modules;
+	}
+	
+	public boolean completedYearModules(Integer student_id)
+	{
+		boolean completedYearModules = true;
+
+		Set<StudentModule> modules = this.getStudentCurrentYearModules(student_id);
+	
+		for(StudentModule thismodule: modules)
+		{
+			if(thismodule.isCompleted() == false) {
+				completedYearModules = false;
+				break;
+			}
+		}
+		
+		return completedYearModules;
+	}
+	
+//	@Transient
+//	public boolean failedCompulsoryModules()
+//	{
+//		boolean failedCompulsoryModules = false;
+//		Set<StudentModule> failedModules = this.getFailedModules();
+//		
+//		//Check if any of the failed module is compulsory
+//		for(StudentModule thismodule: failedModules)
+//		{
+//			Set<CourseModule> courseModules = thismodule.getModule().getCourseModules();
+//			//courseModules.removeIf(thiscourse -> ());
+//			
+//		}
+//		return failedCompulsoryModules;
+//	}
+	
+//	@Transient
+//	public Set<StudentModule> getFailedModules()
+//	{
+//		final int passGrade = 50;
+//		
+//		Set<StudentModule> modules = this.getCurrentYearModules();
+//		modules.removeIf(thismodule -> (thismodule.getGrade() >= passGrade));
+//		
+//		return modules;
+// 	}
 }
 
 

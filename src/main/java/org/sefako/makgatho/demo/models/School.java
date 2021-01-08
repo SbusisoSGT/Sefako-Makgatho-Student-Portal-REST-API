@@ -37,6 +37,18 @@ public class School {
 	@JsonBackReference
 	private Set<Department> departments = new HashSet<>();
 	
+	public Set<Course> getCourses() {
+		return courses;
+	}
+	public void setCourses(Set<Course> courses) {
+		this.courses = courses;
+	}
+	public Set<Department> getDepartments() {
+		return departments;
+	}
+	public void setDepartments(Set<Department> departments) {
+		this.departments = departments;
+	}
 	public Integer getId() {
 		return id;
 	}

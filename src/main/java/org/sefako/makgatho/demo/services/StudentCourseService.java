@@ -60,9 +60,25 @@ public class StudentCourseService {
 		studentCourse.setCourse(course);
 		studentCourse.setRegisteredAt(new Date());
 		studentCourse.setCurrentLevel(1);
+		studentCourse.setApproved(false);
 		studentCourseRepository.save(studentCourse);
 		
 		this.registerCompulsoryModules(studentCourse);
+	}
+	
+	
+	public void updateCompletedStatus(Integer student_course_id)
+	{
+		StudentCourse course = studentCourseRepository.findById(student_course_id).get();
+		course.setCompleted(true);
+		studentCourseRepository.save(course);
+	}
+	
+	public void updateApplicationStatus(Integer student_course_id)
+	{
+		StudentCourse course = studentCourseRepository.findById(student_course_id).get();
+		course.setApproved(true);
+		studentCourseRepository.save(course);
 	}
 	
 	public void updateCourseLevel(Integer id, StudentCourse studentCourse)
@@ -78,6 +94,27 @@ public class StudentCourseService {
 	public Set<StudentModule> studentCourseModules(Integer id)
 	{
 		return studentCourseRepository.findById(id).get().getStudentModules();
+	}
+	
+	public boolean completedUndergradCourse(StudentCourseDTO studentCourse)
+	{
+		
+		boolean completedUndergradCourse = true;
+		
+//		Course course = courseRepository.findById(studentCourse.getCourse_id()).get();
+//		Set<Department> courseDepartments = course.getSchool().getDepartments();
+		
+		//		Student student = studentRepository.findById(student_id).get();
+//		boolean completedAllCourses = true;
+//		Set<StudentCourse> courses = student.getStudentCourses();
+//		
+//		for(StudentCourse course : courses)
+//		{
+//			if(!course.isCompleted())
+//				completedAllCourses = false;	
+//		}
+//		
+		return completedUndergradCourse;
 	}
 	
 	private void registerCompulsoryModules(StudentCourse studentCourse)
