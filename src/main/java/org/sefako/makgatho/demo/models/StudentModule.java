@@ -1,6 +1,6 @@
 package org.sefako.makgatho.demo.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +27,7 @@ public class StudentModule {
 	
 	private int grade;
 	
-	private Date registeredAt;
+	private LocalDate registeredAt;
 	
 	private int academic_year;
 	
@@ -81,11 +81,11 @@ public class StudentModule {
 		this.grade = grade;
 	}
 
-	public Date getRegisteredAt() {
+	public LocalDate getRegisteredAt() {
 		return registeredAt;
 	}
 
-	public void setRegisteredAt(Date registeredAt) {
+	public void setRegisteredAt(LocalDate registeredAt) {
 		this.registeredAt = registeredAt;
 	}
 

@@ -1,9 +1,10 @@
 package org.sefako.makgatho.demo.services;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import org.sefako.makgatho.demo.models.Student;
 import org.sefako.makgatho.demo.models.StudentCourse;
 import org.sefako.makgatho.demo.models.StudentModule;
 import org.sefako.makgatho.demo.models.dto.StudentModuleDTO;
@@ -11,7 +12,6 @@ import org.sefako.makgatho.demo.models.dto.StudentModuleGradeDTO;
 import org.sefako.makgatho.demo.repositories.ModuleRepository;
 import org.sefako.makgatho.demo.repositories.StudentCourseRepository;
 import org.sefako.makgatho.demo.repositories.StudentModuleRepository;
-import org.sefako.makgatho.demo.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,10 @@ public class StudentModuleService {
 	StudentCourseRepository studentCourseRepository;
 	
 	@Autowired
-	StudentRepository studentRepository;
+	StudentCourseService studentCourseService;
+	
+	@Autowired
+	StudentService studentService;
 	
 	public List<StudentModule> all()
 	{
@@ -50,8 +53,8 @@ public class StudentModuleService {
 		StudentModule module = new StudentModule();
 		module.setCourse(studentCourseRepository.findById(studentModuleDTO.getStudent_course_id()).get());
 		module.setModule(moduleRepository.findById(studentModuleDTO.getModule_id()).get());
-		module.setRegisteredAt(new Date());
-		
+		module.setRegisteredAt(LocalDate.now());
+		module.setAcademic_year(LocalDate.now().getYear());
 		studentModuleRepository.save(module);
 	}
 	
@@ -72,18 +75,45 @@ public class StudentModuleService {
 		studentCourseRepository.save(course);
 	}
 	
-//	public void s(Integer module_id)
-//	{
-//		StudentCourse course = this.getStudentCourse(module_id);
-//		if(course.passedYearModules()) {
-//			this.updateCurrentYear(course);
-//			
-//		}else {
-//			Set<StudentModule> failedModules = course.getFailedModules();
-//			
-//		}
-//			
-//	}
+	public void registerNextLevelModules(Integer module_id)
+	{
+		
+		StudentCourse studentCourse = this.getStudentCourse(module_id);
+		Student student = studentCourse.getStudent();
+		
+		if(studentService.completedYearModules(student.getId())) {
+	
+			studentService.passedCurrentYearModules(student.getId());
+			
+			if(studentService.passedCurrentYearModules(student.getId())) {
+				this.updateCurrentYear(studentCourse);
+				studentCourseService.registerCompulsoryModules(studentCourse);
+				
+			}else {
+				Set<StudentModule> failedModules = studentService.getFailedModules(student.getId());
+				if(!failedModules.isEmpty()) {
+					 //If the student didn't fail any compulsory module
+					if(studentService.getFailedCompulsoryModules(student.getId()).isEmpty())
+						this.updateCurrentYear(studentCourse); //Upgrade to the next year
+					
+					this.registerNextYearFailedModules(failedModules, studentCourse);
+				}
+			}		
+		}
+	}
+	
+	public void registerNextYearFailedModules(Set<StudentModule> failedModules, StudentCourse studentCourse)
+	{
+		for(StudentModule thismodule: failedModules)
+		{
+			StudentModule studentModule = new StudentModule();
+			studentModule.setCourse(studentCourse);
+			studentModule.setModule(thismodule.getModule());
+			studentModule.setAcademic_year(thismodule.getAcademic_year() + 1); //set the academic year as the next year
+			studentModule.setRegisteredAt(LocalDate.now());
+			studentModuleRepository.save(studentModule);
+		}
+	}
 	
 	public StudentCourse getStudentCourse(Integer module_id)
 	{

@@ -6,8 +6,8 @@ import org.sefako.makgatho.demo.models.StudentModule;
 import org.sefako.makgatho.demo.models.dto.StudentModuleDTO;
 import org.sefako.makgatho.demo.models.dto.StudentModuleGradeDTO;
 import org.sefako.makgatho.demo.repositories.ModuleRepository;
-import org.sefako.makgatho.demo.repositories.StudentCourseRepository;
 import org.sefako.makgatho.demo.repositories.StudentModuleRepository;
+import org.sefako.makgatho.demo.services.StudentCourseService;
 import org.sefako.makgatho.demo.services.StudentModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author sbusi
+ * @package org.sefako.makgatho.demo.controllers
  *
  */
 @RestController
@@ -36,7 +37,7 @@ public class StudentModuleController {
 	ModuleRepository moduleRepository;
 	
 	@Autowired
-	StudentCourseRepository studentCourseRepository;
+	StudentCourseService studentCourseService;
 	
 	@Autowired 
 	StudentModuleService studentModuleService;
@@ -60,7 +61,7 @@ public class StudentModuleController {
 	@PostMapping("/")
 	public ResponseEntity<?> store(@RequestBody StudentModuleDTO studentModuleDTO)
 	{
-		if(studentCourseRepository.existsById(studentModuleDTO.getStudent_course_id()) && moduleRepository.existsById(studentModuleDTO.getModule_id()))
+		if(studentCourseService.exists(studentModuleDTO.getStudent_course_id()) && moduleRepository.existsById(studentModuleDTO.getModule_id()))
 		{
 			studentModuleService.save(studentModuleDTO);
 			return new ResponseEntity<>("Student module created successfully" ,HttpStatus.CREATED);
@@ -77,7 +78,8 @@ public class StudentModuleController {
 		{
 			studentModuleService.updateModuleGrade(id, gradeDTO);
 			
-			//studentModuleService.updateCurrentYear(id);
+			//If student has completed all current year modules, register all modules for next year 
+			studentModuleService.registerNextLevelModules(id);
 			
 			return new ResponseEntity<>("Student module updated successfully!", HttpStatus.OK);
 		}else

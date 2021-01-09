@@ -1,7 +1,6 @@
 package org.sefako.makgatho.demo.controllers;
 
 import java.util.List;
-import java.util.Set;
 
 import org.sefako.makgatho.demo.models.Course;
 import org.sefako.makgatho.demo.models.Student;
@@ -127,8 +126,17 @@ public class StudentCourseController {
 	}
 	
 	@GetMapping("/{id}/modules")
-	public Set<StudentModule> allStudentCourseModules(@PathVariable Integer id)
+	public ResponseEntity<?> allStudentCourseModules(@PathVariable Integer id)
 	{
-		return studentCourseService.studentCourseModules(id);
+		if(studentCourseService.exists(id))
+			return new ResponseEntity<>(studentCourseService.studentCourseModules(id), HttpStatus.OK);
+		else
+			return new ResponseEntity<>("Student Course Not Found", HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping("/{course_id}/modules/{module_id}")
+	public StudentModule findStudentCourseModule(@PathVariable Integer course_id, @PathVariable Integer module_id)
+	{
+		return studentCourseService.findStudentCourseModule(course_id, module_id);
 	}
 }

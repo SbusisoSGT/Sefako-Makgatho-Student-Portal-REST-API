@@ -1,10 +1,10 @@
 package org.sefako.makgatho.demo.services;
 
-import java.util.Date;
-import java.util.HashSet;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import org.sefako.makgatho.demo.models.CourseModule;
 import org.sefako.makgatho.demo.models.Role;
 import org.sefako.makgatho.demo.models.Student;
 import org.sefako.makgatho.demo.models.StudentCourse;
@@ -48,36 +48,29 @@ public class StudentService {
 		return studentRepository.findById(id).get();
 	}
 	
-	public boolean save(StudentDTO studentDTO)
+	public void save(StudentDTO studentDTO)
 	{
-		if(roleRepository.existsById(studentDTO.getRole_id())) {
-			User user  = new User();
-			user.setFirstname(studentDTO.getFirstname());
-			user.setLastname(studentDTO.getLastname());
-			user.setEmail(studentDTO.getEmail());
-			user.setPassword(studentDTO.getPassword());
-			
-			Role role = roleRepository.findById(studentDTO.getRole_id()).get();
-			Set<Role> roles = new HashSet<Role>();
-			roles.add(role);
-			
-			user.setRoles(roles);
-			userRepository.save(user);
-			
-			Student student = new Student();
-			student.setStudentNum(studentDTO.getStudentNum());
-			student.setRegisteredAt(new Date());
-			student.setUser(user);
-			studentRepository.save(student);
-			
-			return true;
-		}else
-			return false;
+		User user  = new User();
+		user.setFirstname(studentDTO.getFirstname());
+		user.setLastname(studentDTO.getLastname());
+		user.setEmail(studentDTO.getEmail());
+		user.setPassword(studentDTO.getPassword());
+
+		Role role = roleRepository.findById(studentDTO.getRole_id()).get();
+
+		user.getRoles().add(role);
+		userRepository.save(user);
+
+		Student student = new Student();
+		student.setStudentNum(studentDTO.getStudentNum());
+		student.setRegisteredAt(LocalDate.now());
+		student.setUser(user);
+		studentRepository.save(student);
 	}
 	
-	public void update(StudentDTO StudentDTO)
+	public void update(Student student)
 	{
-		//
+		studentRepository.save(student);
 	}
 	
 	public Set<StudentCourse> studentCourses(Integer id)
@@ -85,10 +78,24 @@ public class StudentService {
 		return studentRepository.findById(id).get().getStudentCourses();
 	}
 	
-	public Set<StudentModule> studentCourseModules(Integer student_course_id)
+	public Set<StudentModule> studentCourseModules(Integer student_id, Integer student_course_id)
 	{
-		return studentCourseRepository.findById(student_course_id).get().getStudentModules();
+		StudentCourse studentCourse = null;
+		Set<StudentModule> studentModules = null;
+		Set<StudentCourse> courses = this.find(student_id).getStudentCourses();
+		
+		for(StudentCourse thiscourse: courses) {
+			if(thiscourse.getId() == student_course_id)
+				studentCourse = thiscourse;
+		}
+		
+		if(studentCourse != null) {
+			studentModules = studentCourse.getStudentModules();
+		}
+		
+		return studentModules;
 	}
+	
 	
 	public boolean completedAllCourses(Integer student_id)
 	{
@@ -188,32 +195,35 @@ public class StudentService {
 		return completedYearModules;
 	}
 	
-//	@Transient
-//	public boolean failedCompulsoryModules()
-//	{
-//		boolean failedCompulsoryModules = false;
-//		Set<StudentModule> failedModules = this.getFailedModules();
-//		
-//		//Check if any of the failed module is compulsory
-//		for(StudentModule thismodule: failedModules)
-//		{
-//			Set<CourseModule> courseModules = thismodule.getModule().getCourseModules();
-//			//courseModules.removeIf(thiscourse -> ());
-//			
-//		}
-//		return failedCompulsoryModules;
-//	}
+	public Set<StudentModule> getFailedCompulsoryModules(Integer student_id)
+	{
+		Set<StudentModule> failedModules = this.getFailedModules(student_id);
+		
+		//Check if any of the failed module is compulsory
+		for(StudentModule thisStudentModule: failedModules)
+		{
+			Set<CourseModule> courseModules = thisStudentModule.getModule().getCourseModules();
+			
+			for(CourseModule courseModule: courseModules) {
+				if(courseModule.getModule() == thisStudentModule.getModule()) {
+					if(!courseModule.isCompulsory())
+						failedModules.remove(thisStudentModule);
+				}
+					
+			}
+		}
+		return failedModules;
+	}
 	
-//	@Transient
-//	public Set<StudentModule> getFailedModules()
-//	{
-//		final int passGrade = 50;
-//		
-//		Set<StudentModule> modules = this.getCurrentYearModules();
-//		modules.removeIf(thismodule -> (thismodule.getGrade() >= passGrade));
-//		
-//		return modules;
-// 	}
+	public Set<StudentModule> getFailedModules(Integer student_id)
+	{
+		final int passGrade = 50;
+		
+		Set<StudentModule> modules = this.getStudentCurrentYearModules(student_id);
+		modules.removeIf(thismodule -> (thismodule.getGrade() >= passGrade));
+		
+		return modules;
+ 	}
 }
 
 

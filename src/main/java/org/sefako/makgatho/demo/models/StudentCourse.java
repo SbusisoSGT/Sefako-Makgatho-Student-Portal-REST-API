@@ -1,6 +1,6 @@
 package org.sefako.makgatho.demo.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,7 +40,7 @@ public class StudentCourse{
 	@JsonBackReference
 	private Set<StudentModule> studentModules = new HashSet<>();
 	
-	private Date registeredAt;
+	private LocalDate registeredAt;
 	
 	@Column(columnDefinition = "boolean default false")
 	private boolean completed;
@@ -91,11 +91,11 @@ public class StudentCourse{
 		this.studentModules = studentModules;
 	}
 
-	public Date getRegisteredAt() {
+	public LocalDate getRegisteredAt() {
 		return registeredAt;
 	}
 
-	public void setRegisteredAt(Date registeredAt) {
+	public void setRegisteredAt(LocalDate registeredAt) {
 		this.registeredAt = registeredAt;
 	}
 

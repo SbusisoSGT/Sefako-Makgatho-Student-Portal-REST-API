@@ -1,12 +1,11 @@
 package org.sefako.makgatho.demo.controllers;
 
 import java.util.List;
-import java.util.Set;
 
 import org.sefako.makgatho.demo.models.Student;
-import org.sefako.makgatho.demo.models.StudentCourse;
 import org.sefako.makgatho.demo.models.dto.StudentDTO;
-import org.sefako.makgatho.demo.repositories.StudentRepository;
+import org.sefako.makgatho.demo.repositories.RoleRepository;
+import org.sefako.makgatho.demo.services.StudentCourseService;
 import org.sefako.makgatho.demo.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,10 @@ public class StudentController{
 	StudentService studentService;
 	
 	@Autowired
-	StudentRepository studentRepository;
+	RoleRepository roleRepository;
+	
+	@Autowired
+	StudentCourseService studentCourseService;
 	
 	@GetMapping
 	public List<Student> index()
@@ -40,7 +42,7 @@ public class StudentController{
 	@GetMapping("/{id}")
 	public ResponseEntity<?> show(@PathVariable Integer id)
 	{
-		if(studentRepository.existsById(id))
+		if(studentService.exists(id))
 			return new ResponseEntity<>(studentService.find(id), HttpStatus.OK);
 		else
 			return new ResponseEntity<>("Student Not Found", HttpStatus.NOT_FOUND);
@@ -49,23 +51,38 @@ public class StudentController{
 	@PostMapping
 	public ResponseEntity<?> store(@RequestBody StudentDTO studentDTO)
 	{
-		if(studentService.save(studentDTO))
+		if(roleRepository.existsById(studentDTO.getRole_id())) {
+			studentService.save(studentDTO);
 			return new ResponseEntity<>("Student registered successfully", HttpStatus.CREATED);
-		else
+		}else
 			return new ResponseEntity<>("Role Not Found", HttpStatus.NOT_FOUND);
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Student student)
 	{
-		studentRepository.save(student);
-		
-		return new ResponseEntity<String>("Student updated successful!", HttpStatus.CREATED);
+		if(studentService.exists(id)) {
+			studentService.update(student);
+			return new ResponseEntity<String>("Student updated successful!", HttpStatus.CREATED);
+		}else
+			return new ResponseEntity<String>("Student Not Found", HttpStatus.NOT_FOUND);
 	}	
 	
 	@GetMapping("/{id}/courses/")
-	public Set<StudentCourse> allStudentCourses(@PathVariable Integer id)
+	public ResponseEntity<?> allStudentCourses(@PathVariable Integer id)
 	{
-		return studentService.studentCourses(id);
+		if(studentService.exists(id))
+			return new ResponseEntity<>(studentService.studentCourses(id), HttpStatus.OK);
+		else
+			return new ResponseEntity<>("Student Not Found", HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping("/{student_id}/courses/{course_id}/modules")
+	public ResponseEntity<?> allStudentCourseModules(@PathVariable Integer student_id, @PathVariable Integer course_id)
+	{
+		if(studentService.exists(student_id) && studentCourseService.exists(course_id))
+			return new ResponseEntity<>(studentService.studentCourseModules(student_id, course_id), HttpStatus.OK);
+		else
+			return new ResponseEntity<>("Student or Student Course Not Found", HttpStatus.NOT_FOUND);
 	}
 }

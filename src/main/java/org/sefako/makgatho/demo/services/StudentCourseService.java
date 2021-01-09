@@ -1,6 +1,6 @@
 package org.sefako.makgatho.demo.services;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,12 +58,10 @@ public class StudentCourseService {
 		StudentCourse studentCourse = new StudentCourse();
 		studentCourse.setStudent(student);
 		studentCourse.setCourse(course);
-		studentCourse.setRegisteredAt(new Date());
+		studentCourse.setRegisteredAt(LocalDate.now());
 		studentCourse.setCurrentLevel(1);
 		studentCourse.setApproved(false);
 		studentCourseRepository.save(studentCourse);
-		
-		this.registerCompulsoryModules(studentCourse);
 	}
 	
 	
@@ -79,11 +77,7 @@ public class StudentCourseService {
 		StudentCourse course = studentCourseRepository.findById(student_course_id).get();
 		course.setApproved(true);
 		studentCourseRepository.save(course);
-	}
-	
-	public void updateCourseLevel(Integer id, StudentCourse studentCourse)
-	{
-		
+		this.registerCompulsoryModules(course);
 	}
 	
 	public void delete(Integer id) 
@@ -94,6 +88,19 @@ public class StudentCourseService {
 	public Set<StudentModule> studentCourseModules(Integer id)
 	{
 		return studentCourseRepository.findById(id).get().getStudentModules();
+	}
+	
+	public StudentModule findStudentCourseModule(Integer course_id, Integer module_id)
+	{
+		
+		StudentModule module = null;
+		Set<StudentModule> modules = this.studentCourseModules(course_id);
+		
+		for(StudentModule thismodule: modules) {
+			if(thismodule == module)
+					module = thismodule;
+		}
+		return module;
 	}
 	
 	public boolean completedUndergradCourse(StudentCourseDTO studentCourse)
@@ -117,7 +124,7 @@ public class StudentCourseService {
 		return completedUndergradCourse;
 	}
 	
-	private void registerCompulsoryModules(StudentCourse studentCourse)
+	public void registerCompulsoryModules(StudentCourse studentCourse)
 	{
 		Set<CourseModule> courseModules = studentCourse.getCourse().getCourseModules();
 		courseModules.removeIf(thiscourse -> (thiscourse.isCompulsory() == false));
@@ -128,14 +135,14 @@ public class StudentCourseService {
 		});
 
 		modules.removeIf(thismodule -> (
-			thismodule.getYear() != 1	
+			thismodule.getYear() != studentCourse.getCurrentLevel()	
 		));
 		
 		modules.forEach(thismodule -> {
 			StudentModule studentModule = new StudentModule();
 			studentModule.setCourse(studentCourse);
 			studentModule.setModule(thismodule);
-			studentModule.setRegisteredAt(new Date());
+			studentModule.setRegisteredAt(LocalDate.now());
 			studentModuleRepository.save(studentModule);
 		});
 	}
